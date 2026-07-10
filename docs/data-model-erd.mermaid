@@ -1,0 +1,81 @@
+erDiagram
+    FOLDER ||--o{ ITEM : "contains (optional)"
+    FOLDER ||--o{ FOLDER : "nested in"
+    ITEM ||--o{ ITEM : "sub-items (parent_id)"
+    ITEM ||--o{ ATTACHMENT : "has"
+    ITEM ||--o{ ITEM_TAG : "tagged with"
+    TAG ||--o{ ITEM_TAG : "applied to"
+    ITEM ||--o{ LINK : "links out"
+    ITEM ||--o{ LINK : "linked from"
+    ITEM ||--o{ ITEM_STATUS_LOG : "status history"
+    TEMPLATE ||--o{ ITEM : "created from (optional)"
+
+    FOLDER {
+        text id PK
+        text name
+        text parent_id FK
+        int position
+    }
+    ITEM {
+        text id PK
+        text title
+        text body "non-empty => Notes view"
+        bool is_task "true => Reminders view"
+        text status "not_started..missed..done"
+        int priority
+        text scheduled_start
+        text scheduled_end
+        text remind_at
+        text recurrence_rule
+        text parent_id FK
+        text folder_id FK "optional"
+        bool is_pinned
+        text template_id FK
+        text updated_at
+        text updated_by_device_id
+        text deleted_at
+    }
+    ITEM_STATUS_LOG {
+        text id PK
+        text item_id FK
+        text occurrence_date "per-occurrence, nullable"
+        text status
+        text changed_at
+    }
+    SAVED_VIEW {
+        text id PK
+        text name
+        text scope "reminders|notes|both"
+        text filter_definition "JSON AND/OR tree"
+        text display_mode "list|calendar"
+        bool is_pinned
+        int position
+    }
+    TEMPLATE {
+        text id PK
+        text name
+        text icon
+        bool target_is_task
+        text body_scaffold
+        bool is_default
+        int position
+    }
+    TAG {
+        text id PK
+        text name
+        text color
+    }
+    ITEM_TAG {
+        text item_id FK
+        text tag_id FK
+    }
+    ATTACHMENT {
+        text id PK
+        text item_id FK
+        text file_path
+        text type
+    }
+    LINK {
+        text from_item_id FK
+        text to_item_id FK
+    }

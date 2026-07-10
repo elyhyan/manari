@@ -1,0 +1,24 @@
+sequenceDiagram
+    participant A as Phone (offline edit)
+    participant ADB as Phone's local SQLite
+    participant Srv as Sync API (MacBook)
+    participant SDB as Server DB
+    participant BDB as Desktop's local SQLite
+    participant B as Desktop
+
+    Note over A,ADB: No connection needed to edit
+    A->>ADB: create/edit item
+    ADB-->>A: UI updates instantly
+
+    Note over A,Srv: Phone reconnects (Tailscale reachable)
+    A->>Srv: POST /push (changes since last sync)
+    Srv->>SDB: compare updated_at per row, apply last-write-wins
+    SDB-->>Srv: ack
+
+    Note over B,Srv: Desktop reconnects independently, any time later
+    B->>Srv: GET /pull?since=<desktop's last sync time>
+    Srv->>SDB: fetch rows changed since then
+    SDB-->>Srv: changed rows
+    Srv-->>B: changed rows
+    B->>BDB: apply incoming changes
+    BDB-->>B: UI updates automatically, no manual refresh

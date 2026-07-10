@@ -1,0 +1,30 @@
+flowchart TB
+    subgraph Clients["Flutter clients (phone / iPad / desktop)"]
+        direction LR
+        Phone["Phone"]
+        Desktop["Desktop / Laptop"]
+        Tablet["Tablet"]
+    end
+
+    Phone --- LocalDB1[("SQLite\n(drift)")]
+    Desktop --- LocalDB2[("SQLite\n(drift)")]
+    Tablet --- LocalDB3[("SQLite\n(drift)")]
+
+    Clients -- "Tailscale (private network)\npush/pull sync, LWW" --> Server
+
+    subgraph Server["MacBook Pro M1 Max — always-on server"]
+        SyncAPI["Sync API"]
+        ServerDB[("Metadata DB\n(items, folders, tags, links)")]
+        PhotoStore["Photo storage\n(server-side copy)"]
+        SyncAPI --> ServerDB
+        SyncAPI --> PhotoStore
+    end
+
+    Server -- "Time Machine /\nexternal drive" --> Backup[("Backup copy")]
+
+    Clients -. "Videos: on-demand,\npeer-to-peer over Tailscale\n(never through server)" .-> Clients
+
+    Server -- "CalDAV / Google Calendar API" --> Calendar["Calendar"]
+    Phone -- "App Intents" --> Siri["Siri / Shortcuts / Spotlight"]
+    Phone -- "AppFunctions" --> Gemini["Gemini"]
+    Phone -- "widget data cache" --> Widget["Home screen widget"]

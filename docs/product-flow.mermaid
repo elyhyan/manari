@@ -1,0 +1,31 @@
+flowchart TD
+    Start(["Open app"]) --> Tabs{"Notes  |  Reminders  |  Search"}
+    Items[("One items table\nis_task + body decide the view")]
+
+    Tabs --> RA["REMINDERS VIEW\n(items where is_task = true)"]
+    Tabs --> NA["NOTES VIEW\n(items where body != '')"]
+    Tabs --> SR["Global search\n(spans both — same table)"]
+
+    Items -.-> RA
+    Items -.-> NA
+    Items -.-> SR
+
+    subgraph RA["Reminders view"]
+        RViews["Saved views: Today / Upcoming / All /\nIn progress, unscheduled\n+ tag filters, list or calendar"]
+        RPlus["Tap + : fast capture\n(single line, natural-language date,\nsaves instantly, is_task = true)"]
+        RDetail["Item detail:\nschedule window, recurrence, tags,\nstatus"]
+        RPlus --> RViews
+        RViews --> RDetail
+    end
+
+    subgraph NA["Notes view"]
+        NViews["All items with content + tag filters\n(flat — no folder tree required)"]
+        NPlus["Tap + : opens full editor\nimmediately (title + body)"]
+        NDetail["Item detail:\nbody, tags, backlinks,\nschedule fields if is_task"]
+        NPlus --> NDetail
+        NViews --> NDetail
+    end
+
+    RDetail == "same row —\ntyping a body here\nmakes it appear in Notes too" ==> NDetail
+    NDetail -- "toggle is_task on\n(makes it also appear in Reminders)" --> RDetail
+    RDetail -. "links table: only for\ngenuinely separate items" .-> NDetail
