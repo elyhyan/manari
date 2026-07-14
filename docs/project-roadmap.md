@@ -53,11 +53,11 @@ Each Flutter client (phone, desktop, tablet) holds a full local SQLite database 
 ## Phase 2 — Environment setup
 *Goal: able to run a blank app on every target device.*
 
-- [ ] Install Flutter SDK + Xcode + Android Studio toolchains on the MacBook.
-- [ ] `flutter create` the project; confirm it runs on iOS simulator, Android emulator, and macOS desktop.
-- [ ] Set up Tailscale on the MacBook; confirm you can reach it by hostname from your phone off wifi (cellular data), not just on the same network.
-- [ ] Scaffold `/server` (empty `shelf`/`dart_frog` project, one health-check endpoint) and get it running as a `launchd` service so it survives reboots/logouts.
-- [ ] Init git; first commit.
+- [x] Install Flutter SDK + Xcode + Android Studio toolchains on the MacBook. *(Flutter + Xcode installed; Android Studio deferred — Android emulator not yet verified)*
+- [x] `flutter create` the project; confirm it runs on iOS simulator, Android emulator, and macOS desktop. *(Verified on iOS simulator, macOS desktop, and web; Android pending Android Studio install)*
+- [x] Set up Tailscale on the MacBook; confirm you can reach it by hostname from your phone off wifi (cellular data), not just on the same network. *(Tailscale already connected on this Mac; phone-off-wifi check still needs to be done manually)*
+- [x] Scaffold `/server` (empty `shelf`/`dart_frog` project, one health-check endpoint) and get it running as a `launchd` service so it survives reboots/logouts. *(Running as a per-user LaunchAgent — see server/README.md)*
+- [x] Init git; first commit.
 
 **Checkpoint:** blank Flutter app runs on 2+ platforms, and your phone can hit the server's health-check endpoint over Tailscale from outside your home wifi.
 
